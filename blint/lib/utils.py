@@ -7,6 +7,7 @@ import re
 import shutil
 import string
 import tempfile
+import warnings
 import zipfile
 from enum import Enum
 from importlib.metadata import distribution
@@ -672,6 +673,9 @@ def extract_ar(ar_file: str, to_dir: str | None = None) -> list[str]:
     Extract the given ar compressed files to the directory specified by to_dir.
     Returns the list of extracted files
     """
+    if not Path(ar_file).exists():
+        warnings.warn(f"File {ar_file} does not exist. Skipping extraction.")
+        return []
     if not to_dir:
         to_dir = tempfile.mkdtemp(prefix="ar-temp-", dir=os.getenv("BLINT_TEMP_DIR"))
     files_list = []
